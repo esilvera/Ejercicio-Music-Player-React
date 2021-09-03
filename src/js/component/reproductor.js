@@ -1,3 +1,4 @@
+import { array } from "prop-types";
 import React, { useRef, useState } from "react";
 
 function Reproductor() {
@@ -27,11 +28,11 @@ function Reproductor() {
 		}
 	]);
 
-	function reproducir(finUrl, index) {
+	function reproducir(musicaUrl, index) {
 		/* 		alert("Reproducir esta Canción"); */
-		console.log(index);
+		/* 		console.log(index); */
 		setUltimaPosicion(index);
-		let urlCompleta = baseUrl + finUrl;
+		let urlCompleta = baseUrl + musicaUrl;
 		refAudio.current.src = urlCompleta;
 		refAudio.current.play();
 	}
@@ -41,11 +42,18 @@ function Reproductor() {
 	}
 	function anterior() {
 		alert("Canción Anterior");
-		refAudio.current.pause();
 	}
 	function siguiente() {
-		alert("Canción siguiente");
 		let siguientePosicion = ultimaPosicion + 1;
+
+		console.log("siguiente posicion antes del if: " + siguientePosicion);
+		if (
+			siguientePosicion > musicas.length - 1
+				? (siguientePosicion = 0)
+				: ""
+		);
+		console.log("siguiente posicion despues: " + siguientePosicion);
+
 		let siguienteCancion = musicas[siguientePosicion].url;
 		reproducir(siguienteCancion, siguientePosicion);
 	}
