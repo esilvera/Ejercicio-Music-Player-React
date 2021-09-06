@@ -1,32 +1,27 @@
-import { array } from "prop-types";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 function Reproductor() {
 	let refAudio = useRef(" ");
 	let baseUrl = "https://assets.breatheco.de/apis/sound/";
 
 	let [ultimaPosicion, setUltimaPosicion] = useState(0);
+	let lista = {};
 
-	const [musicas, setMusicas] = useState([
-		{
-			id: 1,
-			category: "game",
-			name: "Mario Castle",
-			url: "files/mario/songs/castle.mp3"
-		},
-		{
-			id: 2,
-			category: "game",
-			name: "Mario Star",
-			url: "files/mario/songs/hurry-starman.mp3"
-		},
-		{
-			id: 3,
-			category: "game",
-			name: "Mario Overworld",
-			url: "files/mario/songs/overworld.mp3"
-		}
-	]);
+	const [musicas, setMusicas] = useState([]);
+
+	useEffect(() => {
+		getMusicas();
+	}, []);
+
+	const getMusicas = async () => {
+		const response = await fetch(
+			"https://assets.breatheco.de/apis/sound/songs"
+		);
+
+		const data = await response.json();
+
+		setMusicas(data);
+	};
 
 	function reproducir(musicaUrl, index) {
 		setUltimaPosicion(index);
@@ -69,19 +64,14 @@ function Reproductor() {
 							{musicas.length > 0 &&
 								musicas.map((musica, index) => {
 									return (
-										<>
-											<li
-												className="music"
-												key={index}
-												onClick={() =>
-													reproducir(
-														musica.url,
-														index
-													)
-												}>
-												{musica.name}
-											</li>
-										</>
+										<li
+											className="music"
+											key={index}
+											onClick={() =>
+												reproducir(musica.url, index)
+											}>
+											{musica.name}
+										</li>
 									);
 								})}
 						</ul>
