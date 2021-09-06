@@ -29,8 +29,6 @@ function Reproductor() {
 	]);
 
 	function reproducir(musicaUrl, index) {
-		/* 		alert("Reproducir esta Canción"); */
-		/* 		console.log(index); */
 		setUltimaPosicion(index);
 		let urlCompleta = baseUrl + musicaUrl;
 		refAudio.current.src = urlCompleta;
@@ -41,45 +39,65 @@ function Reproductor() {
 		refAudio.current.pause();
 	}
 	function anterior() {
-		alert("Canción Anterior");
+		let siguientePosicion = ultimaPosicion - 1;
+		if (
+			siguientePosicion < 0
+				? (siguientePosicion = musicas.length - 1)
+				: ""
+		);
+		let siguienteCancion = musicas[siguientePosicion].url;
+		reproducir(siguienteCancion, siguientePosicion);
 	}
 	function siguiente() {
 		let siguientePosicion = ultimaPosicion + 1;
-
-		console.log("siguiente posicion antes del if: " + siguientePosicion);
 		if (
 			siguientePosicion > musicas.length - 1
 				? (siguientePosicion = 0)
 				: ""
 		);
-		console.log("siguiente posicion despues: " + siguientePosicion);
-
 		let siguienteCancion = musicas[siguientePosicion].url;
 		reproducir(siguienteCancion, siguientePosicion);
 	}
 	return (
 		<>
 			<div>
-				<h1>Music Player</h1>
-				<ul>
-					{musicas.length > 0 &&
-						musicas.map((musica, index) => {
-							return (
-								<>
-									<li
-										key={index}
-										onClick={() =>
-											reproducir(musica.url, index)
-										}>
-										{musica.name}
-									</li>
-								</>
-							);
-						})}
-				</ul>
-				<h6 onClick={pausar}>Pausa</h6>
-				<h6 onClick={anterior}>Anterior</h6>
-				<h6 onClick={siguiente}>Siguiente</h6>
+				<h2>Music Player</h2>
+				<h6>( Escoja canción a reproducir )</h6>
+				<div className="container">
+					<div className="row">
+						<ul>
+							{musicas.length > 0 &&
+								musicas.map((musica, index) => {
+									return (
+										<>
+											<li
+												className="music"
+												key={index}
+												onClick={() =>
+													reproducir(
+														musica.url,
+														index
+													)
+												}>
+												{musica.name}
+											</li>
+										</>
+									);
+								})}
+						</ul>
+					</div>
+				</div>
+				<div className="footer">
+					<a onClick={anterior}>
+						<i className="fas fa-backward"></i>
+					</a>
+					<a onClick={pausar}>
+						<i className="far fa-pause-circle"></i>
+					</a>
+					<a onClick={siguiente}>
+						<i className="fas fa-forward"></i>
+					</a>
+				</div>
 			</div>
 			<audio ref={refAudio}></audio>
 		</>
